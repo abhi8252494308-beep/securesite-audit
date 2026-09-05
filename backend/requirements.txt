@@ -12,12 +12,11 @@ asyncpg==0.29.0  # PostgreSQL driver for production
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.9
-cryptography==43.0.3  # Pre-built wheels available, no Rust needed
-bcrypt==4.2.0
+cryptography==42.0.8  # Pre-built wheels available, no Rust needed
+bcrypt==4.1.2
 
-# Data validation - pin pydantic-core explicitly to ensure pre-built wheel usage
-pydantic==2.9.2
-pydantic-core==2.23.4
+# Data validation - let pip resolve compatible pydantic-core with wheels
+pydantic==2.7.4
 pydantic-settings==2.5.2
 python-dotenv==1.0.1
 
@@ -41,4 +40,4 @@ motor==3.4.0
 pymongo==4.8.0
 
 # Redis (optional)
-redis==5.1.0
+redis==5.0.8
