@@ -114,7 +114,7 @@ describe('Audits Page', () => {
 
 describe('API Health Check', () => {
   it('should respond to health endpoint', () => {
-    cy.request('http://localhost:8012/health').then((response) => {
+    cy.request('https://securesite-audit.onrender.com/health').then((response) => {
       expect(response.status).to.eq(200);
       expect(response.body).to.have.property('status', 'healthy');
     });

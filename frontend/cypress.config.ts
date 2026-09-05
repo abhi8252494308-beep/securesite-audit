@@ -2,7 +2,7 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'https://securesite-audit-frontend.onrender.com',
     viewportWidth: 1280,
     viewportHeight: 720,
     video: false,
@@ -25,6 +25,6 @@ export default defineConfig({
     openMode: 0,
   },
   env: {
-    apiUrl: 'http://localhost:8012/api/v1',
+    apiUrl: 'https://securesite-audit.onrender.com/api/v1',
   },
 });
