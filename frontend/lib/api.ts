@@ -1,12 +1,47 @@
 import axios from 'axios';
+import {
+  API_CONFIG,
+  logApiRequest,
+  logApiResponse,
+  logApiError,
+} from './api-config';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://securesite-audit.onrender.com/api/v1';
+const api = axios.create(API_CONFIG);
 
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
+api.interceptors.request.use(
+  (config) => {
+    logApiRequest({
+      method: config.method || 'get',
+      url: config.url || '',
+      baseURL: config.baseURL,
+      data: config.data,
+    });
+    return config;
   },
-});
+  (error) => {
+    logApiError(error);
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => {
+    logApiResponse({
+      status: response.status,
+      statusText: response.statusText,
+      data: response.data,
+      config: {
+        method: response.config.method || 'get',
+        url: response.config.url || '',
+        baseURL: response.config.baseURL,
+      },
+    });
+    return response;
+  },
+  (error) => {
+    logApiError(error);
+    return Promise.reject(error);
+  }
+);
 
 export default api;
