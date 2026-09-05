@@ -156,8 +156,8 @@ export default function AuditDetailPage() {
       const genRes = await api.post(`/reports/generate/${audit.id}`);
       const reportId = genRes.data.report_id;
       
-      const baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://securesite-audit.onrender.com/api/v1';
-      window.open(`${baseURL}/reports/download/${reportId}`, '_blank');
+      // Use the Next.js proxy to avoid CORS issues
+      window.open(`/api/reports/download/${reportId}`, '_blank');
     } catch (err: any) {
       alert(err.response?.data?.detail || 'Failed to generate report');
     } finally {

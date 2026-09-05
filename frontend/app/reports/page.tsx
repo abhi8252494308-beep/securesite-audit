@@ -35,8 +35,8 @@ export default function ReportsPage() {
   };
 
   const handleDownload = (reportId: string) => {
-    const baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://securesite-audit.onrender.com/api/v1';
-    window.open(`${baseURL}/reports/download/${reportId}`, '_blank');
+    // Use the Next.js proxy to avoid CORS issues
+    window.open(`/api/reports/download/${reportId}`, '_blank');
   };
 
   const handleDelete = async (reportId: string) => {

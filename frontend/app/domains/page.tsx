@@ -61,6 +61,20 @@ export default function DomainsPage() {
         setExpandedId(res.data.id);
       }
     } catch (err: any) {
+      // Log the full error for debugging
+      console.error('Add domain error:', {
+        message: err.message,
+        code: err.code,
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+        config: err.config ? {
+          url: err.config.url,
+          baseURL: err.config.baseURL,
+          method: err.config.method,
+        } : undefined,
+      });
+
       // Provide more detailed error messages
       if (err.response?.status === 400) {
         if (err.response.data?.detail?.includes('already')) {
@@ -72,10 +86,18 @@ export default function DomainsPage() {
         setError('This domain already exists for your account');
       } else if (err.response?.status === 422) {
         setError('Invalid domain format. Please enter a valid domain name (e.g., example.com)');
+      } else if (err.response?.status === 401) {
+        setError('Authentication required. Please log in again.');
+      } else if (err.response?.status === 403) {
+        setError('Access denied. You do not have permission to add domains.');
+      } else if (err.response?.status && err.response.status >= 500) {
+        setError(`Server error (${err.response.status}). Please try again later.`);
       } else if (err.code === 'ECONNABORTED' || err.message === 'Network Error') {
         setError('Cannot connect to server. Please check your connection and try again.');
       } else {
-        setError(err.response?.data?.detail || 'Failed to add domain. Please try again.');
+        // Show actual backend error message if available
+        const backendMessage = err.response?.data?.detail || err.response?.data?.message || err.message;
+        setError(backendMessage || 'Failed to add domain. Please try again.');
       }
     } finally {
       setAdding(false);
@@ -89,7 +111,13 @@ export default function DomainsPage() {
       alert(response.data.message || 'Verification completed');
       await fetchDomains();
     } catch (error: any) {
-      alert(error.response?.data?.detail || 'Failed to verify domain');
+      console.error('Verify domain error:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      });
+      const backendMessage = error.response?.data?.detail || error.response?.data?.message || error.message;
+      alert(backendMessage || 'Failed to verify domain');
     } finally {
       setActionLoading((prev) => ({ ...prev, [domainId]: false }));
     }
@@ -100,8 +128,14 @@ export default function DomainsPage() {
     try {
       await api.delete(`/domains/${domainId}`);
       await fetchDomains();
-    } catch (error) {
-      console.error('Failed to delete domain:', error);
+    } catch (error: any) {
+      console.error('Delete domain error:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      });
+      const backendMessage = error.response?.data?.detail || error.response?.data?.message || error.message;
+      alert(backendMessage || 'Failed to delete domain');
     }
   };
 
@@ -111,7 +145,13 @@ export default function DomainsPage() {
       const res = await api.post('/audits', { domain_id: domainId });
       router.push(`/audits/${res.data.id}`);
     } catch (err: any) {
-      alert(err.response?.data?.detail || 'Failed to start audit');
+      console.error('Run audit error:', {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data,
+      });
+      const backendMessage = err.response?.data?.detail || err.response?.data?.message || err.message;
+      alert(backendMessage || 'Failed to start audit');
       setActionLoading((prev) => ({ ...prev, [domainId]: false }));
     }
   };
