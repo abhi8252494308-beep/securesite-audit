@@ -1,5 +1,5 @@
-# Use Python 3.11 slim as base (matches runtime.txt)
-FROM python:3.11.9-slim
+# Use Python 3.12 slim as base (matches runtime.txt)
+FROM python:3.12.4-slim
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \

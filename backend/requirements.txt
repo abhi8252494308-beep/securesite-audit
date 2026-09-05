@@ -15,8 +15,9 @@ python-multipart==0.0.9
 cryptography==42.0.8  # Pre-built wheels available, no Rust needed
 bcrypt==4.1.2
 
-# Data validation - let pip resolve compatible pydantic-core with wheels
+# Data validation - pin compatible versions with prebuilt wheels
 pydantic==2.7.4
+pydantic-core==2.18.4
 pydantic-settings==2.5.2
 python-dotenv==1.0.1
 
