@@ -61,7 +61,22 @@ export default function DomainsPage() {
         setExpandedId(res.data.id);
       }
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Failed to add domain');
+      // Provide more detailed error messages
+      if (err.response?.status === 400) {
+        if (err.response.data?.detail?.includes('already')) {
+          setError('This domain has already been added');
+        } else {
+          setError(err.response.data.detail || 'Invalid domain format');
+        }
+      } else if (err.response?.status === 409) {
+        setError('This domain already exists for your account');
+      } else if (err.response?.status === 422) {
+        setError('Invalid domain format. Please enter a valid domain name (e.g., example.com)');
+      } else if (err.code === 'ECONNABORTED' || err.message === 'Network Error') {
+        setError('Cannot connect to server. Please check your connection and try again.');
+      } else {
+        setError(err.response?.data?.detail || 'Failed to add domain. Please try again.');
+      }
     } finally {
       setAdding(false);
     }

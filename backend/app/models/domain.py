@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import uuid
@@ -27,5 +27,5 @@ class Domain(Base):
     audits = relationship("Audit", back_populates="domain", cascade="all, delete-orphan")
 
     __table_args__ = (
-        # Unique constraint for user_id + domain_name
+        UniqueConstraint('user_id', 'domain_name', name='uq_user_domain'),
     )

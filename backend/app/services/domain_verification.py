@@ -29,7 +29,6 @@ class DomainVerificationService:
             # Pre-computed bcrypt hash for "default123"
             DEFAULT_PASSWORD_HASH = "$2b$12$Wx6iC9nsN8ifjX7DU4XfNek/qK69aod20W634VcKnwT93is9PP.bq"
             default_user = User(
-                id=str(UUID(int=0)),  # placeholder, will be overridden
                 email="default@securesite-audit.local",
                 hashed_password=DEFAULT_PASSWORD_HASH,
                 full_name="Default User",
