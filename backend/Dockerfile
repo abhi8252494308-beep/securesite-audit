@@ -19,8 +19,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies - use only binary wheels (no Rust)
+ENV PIP_ONLY_BINARY=:all:
+ENV PIP_PREFER_BINARY=1
+RUN pip install --no-cache-dir --only-binary=:all: -r requirements.txt
 
 # Copy application code
 COPY . .
