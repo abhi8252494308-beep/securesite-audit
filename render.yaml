@@ -6,7 +6,7 @@ services:
     region: oregon
     plan: free
     buildCommand: "./build.sh"
-    startCommand: "uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT"
+    startCommand: "gunicorn -k uvicorn.workers.UvicornWorker backend.app.main:app --host 0.0.0.0 --port $PORT --workers 4 --timeout 120"
     envVars:
       - key: PIP_ONLY_BINARY
         value: ":all:"
