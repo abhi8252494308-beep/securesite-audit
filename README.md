@@ -24,13 +24,13 @@ A comprehensive defensive security audit platform for websites. Perform safe, no
 
 - **Frontend**: Next.js 14, TypeScript, Tailwind CSS, D3.js, Cypress
 - **Backend**: FastAPI (Python), SQLAlchemy, Pydantic, Motor (MongoDB)
-- **Database**: PostgreSQL (primary), MongoDB (analytics)
-- **Authentication**: JWT (JSON Web Tokens)
+- **Database**: PostgreSQL (primary), MongoDB (analytics), SQLite (local dev)
+- **Authentication**: JWT (JSON Web Tokens) - No-auth mode with default user for development
 - **Caching**: Redis
-- **PDF Generation**: WeasyPrint
+- **PDF Generation**: ReportLab (no system dependencies)
 - **External APIs**: Qualys SSL Labs API
 - **Testing**: Pytest (backend), Cypress (frontend E2E)
-- **Deployment**: Docker, Docker Compose, Heroku, AWS Elastic Beanstalk
+- **Deployment**: Docker, Docker Compose, Render, Heroku
 
 ## Project Structure
 
@@ -47,12 +47,10 @@ Securesite-Audit/
 │   │   ├── routers/        # API route handlers
 │   │   ├── services/       # Business logic services
 │   │   └── utils/          # Utility functions
-│   ├── alembic/            # Database migrations
 │   ├── requirements.txt    # Python dependencies
 │   └── Dockerfile          # Backend Docker image
 ├── frontend/               # Next.js frontend
 │   ├── app/                # Next.js app directory
-│   │   ├── auth/           # Authentication pages
 │   │   ├── dashboard/      # Dashboard page
 │   │   ├── domains/        # Domain management pages
 │   │   ├── audits/         # Audit pages
@@ -66,6 +64,7 @@ Securesite-Audit/
 ├── database/
 │   └── schema.sql          # Database schema
 ├── docker-compose.yml      # Docker Compose configuration
+├── docker-compose.prod.yml # Production Docker Compose configuration
 ├── .env.example            # Environment variables template
 └── .gitignore              # Git ignore rules
 ```
@@ -122,15 +121,10 @@ Securesite-Audit/
 3. **Set up environment variables**
    ```bash
    cp ../.env.example ../.env
-   # Edit .env with your database credentials
+   # Edit .env with your database credentials (SQLite by default)
    ```
 
-4. **Run database migrations**
-   ```bash
-   alembic upgrade head
-   ```
-
-5. **Start the development server**
+4. **Start the development server** (database tables are created automatically)
    ```bash
    uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
    ```
@@ -186,8 +180,7 @@ Add a meta tag to your website's HTML `<head>`:
 ### Backend Tests (Pytest)
 ```bash
 cd backend
-pip install -r requirements-test.txt
-pytest tests/ -v --cov=app --cov-report=html
+pytest tests/ -v
 ```
 
 ### Frontend Tests (Cypress)
@@ -203,13 +196,6 @@ npm run cypress:run    # Headless CI mode
 - CI/CD ready for GitHub Actions/GitLab CI
 
 ## API Endpoints
-
-### Authentication
-- `POST /api/v1/auth/register` - Register a new user
-- `POST /api/v1/auth/login` - Login and get tokens
-- `POST /api/v1/auth/refresh` - Refresh access token
-- `GET /api/v1/auth/verify-email` - Verify email address
-- `GET /api/v1/auth/me` - Get current user profile
 
 ### Domains
 - `POST /api/v1/domains` - Add a new domain
@@ -318,8 +304,9 @@ npm run cypress:run    # Headless CI mode
    # Edit with production values:
    # - JWT_SECRET_KEY: Use a strong random key
    # - DEBUG: Set to False
-   # - DATABASE_URL: Production database URL
+   # - DATABASE_URL: Production database URL (PostgreSQL)
    # - BACKEND_CORS_ORIGINS: Your frontend domain
+   # - POSTGRES_PASSWORD: Strong database password
    ```
 
 2. **Build and start services**

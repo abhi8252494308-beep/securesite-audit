@@ -14,8 +14,8 @@ if not exist "backend" (
 )
 
 echo.
-echo [1/4] Starting Backend API (Port 8012)...
-start "SecureSite Backend" cmd /k "cd backend && python -m uvicorn app.main:app --port 8012 --reload"
+echo [1/4] Starting Backend API (Port 8000)...
+start "SecureSite Backend" cmd /k "cd backend && python -m uvicorn app.main:app --port 8000 --reload"
 
 echo.
 echo [2/4] Waiting for backend to start...
@@ -35,8 +35,8 @@ echo All Services Started!
 echo ============================================
 echo.
 echo Frontend:  http://localhost:3000
-echo Backend:   http://localhost:8012
-echo API Docs:  http://localhost:8012/docs
+echo Backend:   http://localhost:8000
+echo API Docs:  http://localhost:8000/docs
 echo.
 echo Press any key to close this window (services will keep running in separate windows)
 pause
